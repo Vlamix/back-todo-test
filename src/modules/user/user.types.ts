@@ -1,7 +1,10 @@
+import { Todo } from '../todo/todo.entity'
+
 export interface IUser {
-  firstName: string
-  lastName: string
+  id: number
   email: string
   password: string
   isActive: boolean
+  created_at: Date
+  todos: Todo[]
 }

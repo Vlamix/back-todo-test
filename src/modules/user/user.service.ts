@@ -11,6 +11,13 @@ export class UserService {
     private userRepository: Repository<IUser>,
   ) {}
 
+  public async create(user: {
+    email: string
+    password: string
+  }): Promise<IUser> {
+    return this.userRepository.save(user)
+  }
+
   public findAll(): Promise<IUser[]> {
     return this.userRepository.find()
   }

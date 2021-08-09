@@ -23,13 +23,9 @@ export class AuthController {
     if (user) {
       throw new HttpException('User is exist', HttpStatus.CONFLICT)
     }
-
-    // Создать пользователя
-
+    const token = await this.authService.registration(body)
     return {
-      token: 'ALKSDJlaksdj39989Asldkj93-@jlksjf',
-      name: '',
-      email: 'some@gmail.com',
+      token: token,
     }
   }
 
