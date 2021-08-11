@@ -1,5 +1,4 @@
-import { Body, Injectable } from '@nestjs/common'
-//import { ITodo } from './todo.types'
+import { Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { Todo } from './todo.entity'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -13,13 +12,11 @@ export class TodoService {
   ) {}
 
   public async create(todo: ITodo) {
-    const newTodo = await this.todoRepository.save(todo)
-    return newTodo
+    return this.todoRepository.save(todo)
   }
 
   public async findAll() {
-    const todo = await this.todoRepository.find()
-    return todo
+    return await this.todoRepository.find()
   }
 
   public async findOneById(id: number) {
@@ -32,7 +29,7 @@ export class TodoService {
     })
   }
 
-  public async updateTodo(id: number, @Body() body) {
+  public async updateTodo(id: number, body: any) {
     await this.todoRepository.update(id, body).then((result) => {
       return result
     })
@@ -43,10 +40,4 @@ export class TodoService {
       return result
     })
   }
-
-  /*  public FindAll()
-
-  public update(todo: ITodo): ITodo {
-    return this.todoRepository.update()
-  }*/
 }

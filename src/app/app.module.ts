@@ -11,7 +11,6 @@ import { AuthModule } from '../modules/auth/auth.module'
 
 @Module({
   imports: [
-    TodoModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -25,6 +24,7 @@ import { AuthModule } from '../modules/auth/auth.module'
     }),
     UserModule,
     AuthModule,
+    TodoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

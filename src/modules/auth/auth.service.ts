@@ -1,15 +1,21 @@
-import { Injectable } from '@nestjs/common'
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 import { User } from '../user/user.entity'
 import { UserRegistrationDto } from './dto/user-registration.dto'
 import { UserService } from '../user/user.service'
+import { UserLoginDto } from './dto/user-login.dto'
 
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
-    private userService: UserService,
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
   ) {}
   public passwordHash(password): Promise<string> {
     return bcrypt.hash(password, 12)
@@ -28,5 +34,20 @@ export class AuthService {
     return {
       token: this.jwtService.sign(payload),
     }
+  }
+
+  public async checkToken(token: string) {
+    return this.jwtService.decode(token)
+  }
+
+  public async login(userDto: UserLoginDto) {
+    const user = await this.userService.findOneByEmail(userDto.email)
+    const isEqual = await bcrypt.compare(userDto.password, user.password)
+    if (isEqual && user) {
+      return this.generateToken(user)
+    }
+    throw new UnauthorizedException({
+      message: 'incorrect data',
+    })
   }
 }
