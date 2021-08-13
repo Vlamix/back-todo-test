@@ -12,9 +12,6 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ default: true })
-  isActive: boolean
-
   @Column()
   email: string
 

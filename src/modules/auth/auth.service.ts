@@ -1,9 +1,4 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 import { User } from '../user/user.entity'
@@ -37,7 +32,11 @@ export class AuthService {
   }
 
   public async checkToken(token: string) {
-    return this.jwtService.decode(token)
+    if (!token) {
+      throw new Error('Error')
+    }
+
+    return this.jwtService.verify(token)
   }
 
   public async login(userDto: UserLoginDto) {

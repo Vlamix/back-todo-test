@@ -12,11 +12,11 @@ export class TodoService {
   ) {}
 
   public async create(todo: ITodo) {
-    return this.todoRepository.save(todo)
+    return await this.todoRepository.save(todo)
   }
 
-  public async findAll() {
-    return await this.todoRepository.find()
+  public async findAll(userId: any): Promise<ITodo[]> {
+    return await this.todoRepository.find({ user: userId })
   }
 
   public async findOneById(id: number) {

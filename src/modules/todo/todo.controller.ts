@@ -7,9 +7,9 @@ import {
   Headers,
   Param,
   Delete,
+  Patch,
 } from '@nestjs/common'
 import { TodoService } from './todo.service'
-import { Todo } from './todo.entity'
 import { AuthService } from '../auth/auth.service'
 
 @Controller('todo')
@@ -20,34 +20,49 @@ export class TodoController {
   ) {}
 
   @Get()
-  public getAll(@Headers() { token }): Promise<Todo[]> {
-    return this.todoService.findAll()
+  public async getAll(@Headers() { token }) {
+    const user = await this.authService.checkToken(token)
+    if (!user) {
+      return {
+        error: 'user not found',
+      }
+    }
+
+    return await this.todoService.findAll(user.id)
   }
 
   @Get(':id')
-  public getOne(@Param() { id }, @Headers() { token }) {
+  public getOne(@Param() { id }) {
     return this.todoService.findOneById(id)
   }
 
   @Post()
-  public create(@Body() body, @Headers() { token }) {
-    console.log(body)
-    return this.authService.checkToken(token)
-    //this.todoService.create(body)
+  public async create(@Body() body, @Headers() headers) {
+    const user = await this.authService.checkToken(headers.token)
+    if (!user) {
+      return {
+        error: 'User not found',
+      }
+    }
+
+    return await this.todoService.create({
+      title: body.title,
+      user: user,
+    })
   }
 
   @Delete(':id')
-  public delete(@Param() { id }, @Headers() { token }) {
+  public delete(@Param() { id }) {
     return this.todoService.delete(id)
   }
 
   @Put(':id')
-  public updateTodo(@Body() body, @Param() { id }, @Headers() { token }) {
+  public updateTodo(@Body() body, @Param() { id }) {
     return this.todoService.updateTodo(id, body)
   }
 
-  @Put('id')
-  public completeTodo(@Body() body, @Param() { id }, @Headers() { token }) {
+  @Patch(':id')
+  public completeTodo(@Body() body, @Param() { id }) {
     return this.todoService.completeTodo(id, body)
   }
 }
