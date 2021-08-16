@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common'
 import { TodoService } from './todo.service'
 import { AuthService } from '../auth/auth.service'
+import { TodoDto } from './dto/todo.dto'
 
 @Controller('todo')
 export class TodoController {
@@ -37,7 +38,7 @@ export class TodoController {
   }
 
   @Post()
-  public async create(@Body() body, @Headers() headers) {
+  public async create(@Body() body: TodoDto, @Headers() headers) {
     const user = await this.authService.checkToken(headers.token)
     if (!user) {
       return {
@@ -57,12 +58,12 @@ export class TodoController {
   }
 
   @Put(':id')
-  public updateTodo(@Body() body, @Param() { id }) {
+  public updateTodo(@Body() body: TodoDto, @Param() { id }) {
     return this.todoService.updateTodo(id, body)
   }
 
   @Patch(':id')
-  public completeTodo(@Body() body, @Param() { id }) {
+  public completeTodo(@Body() body: TodoDto, @Param() { id }) {
     return this.todoService.completeTodo(id, body)
   }
 }
