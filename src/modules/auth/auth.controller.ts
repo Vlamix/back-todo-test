@@ -10,7 +10,9 @@ import { AuthService } from './auth.service'
 import { UserRegistrationDto } from './dto/user-registration.dto'
 import { UserService } from '../user/user.service'
 import { UserLoginDto } from './dto/user-login.dto'
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   public constructor(
@@ -20,6 +22,12 @@ export class AuthController {
   ) {}
 
   @Post('/registration')
+  @ApiBody({ type: UserRegistrationDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Created new user and res user token',
+    type: String,
+  })
   public async registration(@Body() body: UserRegistrationDto) {
     const user = await this.userService.findOneByEmail(body.email)
     if (user) {
@@ -30,6 +38,12 @@ export class AuthController {
   }
 
   @Post('/login')
+  @ApiBody({ type: UserLoginDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Login user and res user token',
+    type: String,
+  })
   public async login(@Body() body: UserLoginDto) {
     const user = await this.userService.findOneByEmail(body.email)
     if (!user) {
