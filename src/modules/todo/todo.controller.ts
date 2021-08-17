@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common'
 import { TodoService } from './todo.service'
 import { AuthService } from '../auth/auth.service'
-import { TodoDto } from './dto/todo.dto'
+import { TodoDto, UpdateTodoDto } from './dto/todo.dto'
 
 @Controller('todo')
 export class TodoController {
@@ -63,7 +63,7 @@ export class TodoController {
   }
 
   @Patch(':id')
-  public completeTodo(@Body() body: TodoDto, @Param() { id }) {
-    return this.todoService.completeTodo(id, body)
+  public completeTodo(@Body() body: UpdateTodoDto, @Param() { id }) {
+    return this.todoService.updateTodo(id, body)
   }
 }
